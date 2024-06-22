@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('image');
             $table->json('symptoms');
             $table->json('images')->nullable();
+            $table->string('nscient')->nullable();
+            $table->string('famille')->nullable();
+            $table->string('genre')->nullable();
             $table->text('description')->nullable();
             $table->text('habitat')->nullable();
             $table->text('propriete')->nullable();
