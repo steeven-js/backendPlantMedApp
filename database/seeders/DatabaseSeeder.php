@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SymptomSeeder::class,
             PlantMedSeeder::class,
+            PromotionSeeder::class,
+            SlideSeeder::class,
         ]);
     }
 }
