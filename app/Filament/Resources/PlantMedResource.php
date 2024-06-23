@@ -88,7 +88,9 @@ class PlantMedResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Image')
+                    ->collection('image'),
                 Tables\Columns\TextColumn::make('nscient')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('famille')

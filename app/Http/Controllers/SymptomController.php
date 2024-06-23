@@ -12,7 +12,9 @@ class SymptomController extends Controller
      */
     public function index()
     {
-        return Symptom::all();
+        $symptoms = Symptom::where('is_active', 1)
+            ->get();
+        return $symptoms;
     }
 
     /**

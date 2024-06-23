@@ -12,11 +12,9 @@ class PlantMedController extends Controller
      */
     public function index()
     {
-        $plants = PlantMed::where('is_available', 1)->get();
-        // $plants->map(function ($plant) {
-        //     $plant->images = json_decode($plant->images, true);
-        //     return $plant;
-        // });
+        $plants = PlantMed::where('is_active', 1)
+            // ->where('id', '=', 1)
+            ->get();
         return $plants;
     }
 

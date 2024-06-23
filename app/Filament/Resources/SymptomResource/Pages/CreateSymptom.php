@@ -9,4 +9,10 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSymptom extends CreateRecord
 {
     protected static string $resource = SymptomResource::class;
+
+    protected function afterCreate(): void
+    {
+        $this->record->image = $this->record->getImageAttribute();
+        $this->record->save();
+    }
 }

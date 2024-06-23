@@ -37,4 +37,14 @@ class Symptom extends Model implements HasMedia
         'name'       => Like::class,
         'updated_at' => Like::class,
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('image')->singleFile();
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->getFirstMediaUrl('image');
+    }
 }
