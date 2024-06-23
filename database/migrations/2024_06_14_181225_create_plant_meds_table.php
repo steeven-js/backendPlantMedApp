@@ -16,9 +16,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->string('name');
-            $table->string('image');
-            $table->json('symptoms');
+            $table->string('image')->nullable();
             $table->json('images')->nullable();
+            $table->json('symptoms')->nullable();
             $table->string('nscient')->nullable();
             $table->string('famille')->nullable();
             $table->string('genre')->nullable();

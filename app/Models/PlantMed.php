@@ -4,30 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Orchid\Screen\AsSource;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Filterable;
 
-class PlantMed extends Model
+class PlantMed extends Model implements HasMedia
 {
     use HasFactory;
     use AsSource;
     use Filterable;
-
-    // $table->text('habitat')->nullable();
-    // $table->text('propriete')->nullable();
-    // $table->text('usageInterne')->nullable();
-    // $table->text('usageExterne')->nullable();
-    // $table->text('precaution')->nullable();
-    // $table->json('sources')->nullable();
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'is_active',
-        'is_available',
-    ];
+    use InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -50,8 +38,6 @@ class PlantMed extends Model
     protected $casts = [
         'images' => 'array',
         'sources' => 'array',
-        'is_new' => 'boolean',
-        'is_top' => 'boolean',
         'symptoms' => 'array',
         'is_active' => 'boolean',
         'is_available' => 'boolean',
@@ -70,16 +56,34 @@ class PlantMed extends Model
         'description'    => Like::class,
     ];
 
-    public function toArray()
+    public function registerMediaCollections(): void
     {
-        $array = parent::toArray();
+        $this->addMediaCollection('image')->singleFile();
+        $this->addMediaCollection('images');
+    }
 
-        $camelCaseArray = [];
-        foreach ($array as $key => $value) {
-            $camelCaseKey = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
-            $camelCaseArray[$camelCaseKey] = $value;
-        }
+    public function getImageAttribute()
+    {
+        return $this->getFirstMediaUrl('image');
+    }
 
-        return $camelCaseArray;
+    // obtenir les url des images de la collection images
+    public function getImagesAttribute()
+    {
+        return $this->getMedia('images')->map(function ($item) {
+            return $item->getUrl();
+        });
+
+        // Inclure les URLs des images multiples
+        $mediaItems = $plantmed->getMedia('images');
+        $urls = $mediaItems->map(function ($item) {
+            return $item->getUrl();
+        })->toArray();
+
+        // Enregistrer dans images le tableau des URLs
+        $plantmed->images = $urls;
+
+        // Sauvegarder les données
+        $plantmed->save();
     }
 }

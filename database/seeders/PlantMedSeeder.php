@@ -266,19 +266,19 @@ class PlantMedSeeder extends Seeder
         ];
 
         // http image
-        $image_url = 'https://everbloom.rn-admin.site/storage/b1XU1Z2Acr87FV6Qhh5sirw9E4v3Qqji5SxYXl6X.jpg';
+        // $image_url = 'https://everbloom.rn-admin.site/storage/b1XU1Z2Acr87FV6Qhh5sirw9E4v3Qqji5SxYXl6X.jpg';
 
-        $images = [
-            'https://everbloom.rn-admin.site/storage/VmrTiMPE50AVJBgZ5Vfxg2Zz9DoMZ3fOuVPBNfyh.jpg',
-            'https://everbloom.rn-admin.site/storage/yvxkg5WrOv1FIRczJdWfKoOwxwfH3nB9qkwzyRaN.jpg',
-            'https://everbloom.rn-admin.site/storage/pW1qWPMBl4zPUASMeKCw5iocCuw8XXO22ui2GIqz.jpg'
-        ];
+        // $images = [
+        //     'https://everbloom.rn-admin.site/storage/VmrTiMPE50AVJBgZ5Vfxg2Zz9DoMZ3fOuVPBNfyh.jpg',
+        //     'https://everbloom.rn-admin.site/storage/yvxkg5WrOv1FIRczJdWfKoOwxwfH3nB9qkwzyRaN.jpg',
+        //     'https://everbloom.rn-admin.site/storage/pW1qWPMBl4zPUASMeKCw5iocCuw8XXO22ui2GIqz.jpg'
+        // ];
 
-        $sources = [
-            'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
-            'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
-            'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
-        ];
+        // $sources = [
+        //     'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
+        //     'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
+        //     'https://www.healthline.com/nutrition/10-proven-benefits-of-spirulina',
+        // ];
 
         foreach ($plant_meds as $plant_med) {
             $random_symptoms = Arr::random($symptoms, 5);
@@ -294,10 +294,10 @@ class PlantMedSeeder extends Seeder
                 'usageInterne' => $plant_med . 'usageInterne',
                 'usageExterne' => $plant_med . 'usageExterne',
                 'precaution' => $plant_med . 'precaution',
-                'image' => $image_url,
-                'images' => json_encode($images),
-                'symptoms' => json_encode($random_symptoms),
-                'sources' => json_encode($sources),
+                // 'image' => $image_url,
+                // 'images' => json_encode($images),
+                // 'symptoms' => json_encode($random_symptoms),
+                // 'sources' => json_encode($sources),
                 'is_featured' => (bool)rand(0, 1),
                 'is_best_seller' => (bool)rand(0, 1),
                 'is_active' => true,

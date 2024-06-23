@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::redirect('/', '/admin/login');
+
+// Route::get('/test', 'App\Http\Controllers\TestController@index');

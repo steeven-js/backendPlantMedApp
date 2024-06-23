@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 use Orchid\Screen\AsSource;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Filterable;
 
-class Symptom extends Model
+class Symptom extends Model implements HasMedia
 {
     use AsSource;
     use HasFactory;
     use Filterable;
+    use InteractsWithMedia;
 
     protected $hidden = [
         'created_at',
