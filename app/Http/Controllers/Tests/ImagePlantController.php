@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tests;
 
 use App\Models\PlantMed;
-use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
 
-class TestController extends Controller
+class ImagePlantController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         // Définir le chemin du dossier contenant les images des plantes
