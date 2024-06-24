@@ -41,14 +41,8 @@ class ImagePlantController extends Controller
                 // Débogage : Afficher le nom de la plante trouvée
                 // dd('Plante trouvée : ' . $plant->name);
 
-                // Ajouter le fichier image à la collection 'image' de Spatie Media Library
-                $plant->addMedia($file->getPathname())->toMediaCollection('image');
-
                 // Ajouter le fichier image à la collection 'images' de Spatie Media Library
                 $plant->addMedia($file->getPathname())->toMediaCollection('images');
-
-                // Mettre à jour l'attribut image
-                $plant->image = $plant->getImageAttribute();
 
                 // Urls des images de la collection 'images'
                 $urls = $plant->getMedia('images')->map(function ($item) {
