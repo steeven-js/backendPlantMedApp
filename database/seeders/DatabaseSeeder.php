@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PlantMedSeeder::class,
             PromotionSeeder::class,
             SlideSeeder::class,
+            BannerSeeder::class,
         ]);
 
         // Attribuer aléatoirement le booléen is_featured à 10 des plantes médicinales
