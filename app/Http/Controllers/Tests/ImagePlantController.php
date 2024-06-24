@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Tests;
 
 use App\Models\PlantMed;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 
 class ImagePlantController extends Controller
 {
@@ -42,7 +44,21 @@ class ImagePlantController extends Controller
                 // Ajouter le fichier image à la collection 'image' de Spatie Media Library
                 $plant->addMedia($file->getPathname())->toMediaCollection('image');
 
+                // Ajouter le fichier image à la collection 'images' de Spatie Media Library
+                $plant->addMedia($file->getPathname())->toMediaCollection('images');
+
+                // Mettre à jour l'attribut image
                 $plant->image = $plant->getImageAttribute();
+
+                // Urls des images de la collection 'images'
+                $urls = $plant->getMedia('images')->map(function ($item) {
+                    return $item->getUrl();
+                })->toArray();
+
+                // Enregistrer dans images le tableau des URLs
+                $plant->images = $urls;
+
+                // Sauvegarder les données
                 $plant->save();
 
                 // Débogage : Confirmer l'ajout de l'image

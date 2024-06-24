@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tests;
 
 use App\Models\PlantMed;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SyptomByPlantController extends Controller
 {

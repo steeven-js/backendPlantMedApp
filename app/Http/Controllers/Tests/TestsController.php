@@ -46,7 +46,6 @@ class TestsController extends Controller
 
                 // Mettre à jour l'attribut image
                 $plant->image = $plant->getImageAttribute();
-                $plant->save();
 
                 // Urls des images de la collection 'images'
                 $urls = $plant->getMedia('images')->map(function ($item) {
