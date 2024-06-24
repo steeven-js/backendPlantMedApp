@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 class TestsController extends Controller
 {
-    public function assignImages()
+    public function index()
     {
         // Définir le chemin du dossier contenant les images des plantes
         $directory = public_path('plantes');
