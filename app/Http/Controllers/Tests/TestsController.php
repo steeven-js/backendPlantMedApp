@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tests;
 
-use App\Models\PlantMed;
-use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-class TestController extends Controller
+class TestsController extends Controller
 {
     public function index()
     {

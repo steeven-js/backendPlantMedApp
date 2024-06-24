@@ -16,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/admin/login');
 
+Route::get('/test', [App\Http\Controllers\Tests\TestsController::class, 'index']);
 // Route::get('/test1', [App\Http\Controllers\Tests\SyptomByPlantController::class, 'index']);
 Route::get('/test2', [App\Http\Controllers\Tests\ImagePlantController::class, 'index']);
-Route::get('/test', [App\Http\Controllers\Tests\TestController::class, 'index']);
