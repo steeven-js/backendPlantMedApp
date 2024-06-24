@@ -44,12 +44,15 @@ class TestsController extends Controller
                 $plant->image = $plant->getImageAttribute();
                 $plant->save();
 
-                // Dans un tableau mettre 3 fois l'url de l'image et sauvegarder dans 'images'
-                $plant->images = [
-                    $plant->image,
-                    $plant->image,
-                    $plant->image,
-                ];
+                // Urls des images de la collection 'images'
+                $urls = $plant->getMedia('images')->map(function ($item) {
+                    return $item->getUrl();
+                })->toArray();
+
+                // Enregistrer dans images le tableau des URLs
+                $plant->images = $urls;
+
+                // Sauvegarder les données
                 $plant->save();
 
                 // Débogage : Confirmer l'ajout de l'image
