@@ -14,6 +14,7 @@ use App\Filament\Resources\PlantMedResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\PlantMedResource\RelationManagers;
+use App\Models\Promotion;
 
 class PlantMedResource extends Resource
 {
@@ -146,6 +147,11 @@ class PlantMedResource extends Resource
                                     ->label('Visible')
                                     ->helperText('Activer ou désactiver la plante pour la rendre visible ou non sur l\'application')
                                     ->default(false),
+
+                                Forms\Components\Select::make('promotion')
+                                    ->label('Promotion')
+                                    ->options(Promotion::all()->pluck('name', 'name'))
+                                    ->helperText('Choisir une promotion pour la plante'),
                             ]),
 
                         Forms\Components\Section::make('Information scientifiques')
