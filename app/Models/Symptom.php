@@ -26,6 +26,9 @@ class Symptom extends Model implements HasMedia
     protected $fillable = [
         'name',
         'image',
+        'description',
+        'source',
+        'is_active'
     ];
 
     protected $allowedSorts = [
