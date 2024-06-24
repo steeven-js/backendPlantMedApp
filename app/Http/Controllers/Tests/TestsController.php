@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tests;
 
 use App\Models\PlantMed;
 use Illuminate\Support\Facades\File;
