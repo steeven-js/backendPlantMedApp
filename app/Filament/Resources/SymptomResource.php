@@ -41,22 +41,7 @@ class SymptomResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('name')
                                     ->required()
-                                    ->maxLength(255)
-                                    ->live(onBlur: true)
-                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                        if ($operation !== 'create') {
-                                            return;
-                                        }
-
-                                        $set('slug', Str::slug($state));
-                                    }),
-
-                                Forms\Components\TextInput::make('slug')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->unique(Symptom::class, 'slug', ignoreRecord: true),
+                                    ->maxLength(255),
 
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full'),
