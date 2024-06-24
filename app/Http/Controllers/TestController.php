@@ -39,6 +39,9 @@ class TestController extends Controller
                 // Ajouter le fichier image à la collection 'image' de Spatie Media Library
                 $plant->addMedia($file->getPathname())->toMediaCollection('image');
 
+                $plant->image = $plant->getImageAttribute();
+                $plant->save();
+
                 // Débogage : Confirmer l'ajout de l'image
                 // dd('Image ajoutée à la plante : ' . $plant->name);
             } else {
