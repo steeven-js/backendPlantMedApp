@@ -31,6 +31,7 @@ class PlantMed extends Model implements HasMedia
         'usageInterne',
         'usageExterne',
         'precaution',
+        'promotion',
         'sources',
         'is_available'
     ];
