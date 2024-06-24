@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Tests;
 
 use App\Models\PlantMed;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
 class TestsController extends Controller
