@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BannerResource\Pages;
-use App\Filament\Resources\BannerResource\RelationManagers;
-use App\Models\Banner;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Banner;
+use Filament\Forms\Form;
+use App\Models\Promotion;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\BannerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\BannerResource\RelationManagers;
 
 class BannerResource extends Resource
 {
@@ -26,9 +27,9 @@ class BannerResource extends Resource
                 Forms\Components\SpatieMediaLibraryFileUpload::make('image')
                     ->collection('image')
                     ->required(),
-                Forms\Components\TextInput::make('promotion')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('promotion')
+                    ->options(Promotion::all()->pluck('name', 'name'))
+                    ->required(),
             ]);
     }
 

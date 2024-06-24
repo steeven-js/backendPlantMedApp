@@ -16,4 +16,10 @@ class EditBanner extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $this->record->image = $this->record->getImageAttribute();
+        $this->record->save();
+    }
 }
