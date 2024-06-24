@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Tests;
+namespace App\Http\Controllers;
 
 use App\Models\PlantMed;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
 class TestsController extends Controller
 {
-    public function index()
+    public function assignImages()
     {
         // Définir le chemin du dossier contenant les images des plantes
         $directory = public_path('plantes');
@@ -41,6 +39,10 @@ class TestsController extends Controller
                 // Ajouter le fichier image à la collection 'image' de Spatie Media Library
                 $plant->addMedia($file->getPathname())->toMediaCollection('image');
 
+                // Ajouter le fichier image à la collection 'images' de Spatie Media Library
+                $plant->addMedia($file->getPathname())->toMediaCollection('images');
+
+                // Mettre à jour l'attribut image
                 $plant->image = $plant->getImageAttribute();
                 $plant->save();
 
@@ -50,11 +52,8 @@ class TestsController extends Controller
                 })->toArray();
 
                 // Enregistrer dans images le tableau des URLs
-                $plant->images = [
-                    $urls,
-                    $urls,
-                    $urls,
-                ];
+                $plant->images = $urls;
+
                 // Sauvegarder les données
                 $plant->save();
 
