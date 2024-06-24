@@ -50,8 +50,11 @@ class TestsController extends Controller
                 })->toArray();
 
                 // Enregistrer dans images le tableau des URLs
-                $plant->images = $urls;
-
+                $plant->images = [
+                    $urls,
+                    $urls,
+                    $urls,
+                ];
                 // Sauvegarder les données
                 $plant->save();
 
