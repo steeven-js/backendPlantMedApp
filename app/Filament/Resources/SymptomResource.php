@@ -46,9 +46,9 @@ class SymptomResource extends Resource
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full'),
 
-                                Forms\Components\Section::make('source')
+                                Forms\Components\Section::make('sources')
                                     ->schema([
-                                        Forms\Components\Textarea::make('source')
+                                        Forms\Components\Textarea::make('sources')
                                             ->label('Source des informations')
                                             ->rows(1)
                                             ->cols(10),
