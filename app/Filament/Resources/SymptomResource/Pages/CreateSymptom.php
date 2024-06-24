@@ -10,6 +10,11 @@ class CreateSymptom extends CreateRecord
 {
     protected static string $resource = SymptomResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function afterCreate(): void
     {
         $this->record->image = $this->record->getImageAttribute();

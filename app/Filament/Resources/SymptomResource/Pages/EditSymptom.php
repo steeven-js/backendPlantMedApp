@@ -17,6 +17,11 @@ class EditSymptom extends EditRecord
         ];
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function afterSave(): void
     {
         $this->record->image = $this->record->getImageAttribute();

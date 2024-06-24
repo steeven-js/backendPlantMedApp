@@ -11,49 +11,107 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Exports\SymptomeExporter;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SymptomResource extends Resource
 {
     protected static ?string $model = Symptom::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $navigationLabel = 'Symptômes';
+
+    protected static ?string $modelLabel = 'Symptômes';
+
+    protected static ?string $navigationGroup = 'Application';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
-                    ->collection('image'),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('sources'),
-            ]);
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make()
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+
+                                Forms\Components\MarkdownEditor::make('description')
+                                    ->columnSpan('full'),
+
+                                Forms\Components\Section::make('source')
+                                    ->schema([
+                                        Forms\Components\Textarea::make('source')
+                                            ->label('Source des informations')
+                                            ->rows(1)
+                                            ->cols(10),
+                                    ])
+                                    ->collapsible(),
+                            ])
+                            ->columns(2),
+
+                        Forms\Components\Section::make('Icone symptôme')
+                            ->schema([
+                                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                                    ->collection('image')
+                                    ->hiddenLabel(),
+                            ])
+                            ->collapsible()
+
+                    ])
+                    ->columnSpan(['lg' => 2]),
+
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make('Status')
+                            ->schema([
+                                Forms\Components\Toggle::make('is_active')
+                                    ->label('Visible')
+                                    ->helperText('Détermine si le symptôme est visible sur l\'application')
+                                    ->default(true),
+                            ]),
+                    ])
+                    ->columnSpan(['lg' => 1]),
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Image')
+                    ->collection('image'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nom')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->label('Visible')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
-                    ->label('Image')
-                    ->collection('image'),
             ])
             ->filters([
                 //
+            ])
+            ->headerActions([
+                Tables\Actions\ExportAction::make()
+                    ->exporter(SymptomeExporter::class)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -62,7 +120,8 @@ class SymptomResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->description('Les symptômes sont les signes visibles d\'une maladie ou d\'un parasite sur l\'organisme.');
     }
 
     public static function getRelations(): array
@@ -79,5 +138,15 @@ class SymptomResource extends Resource
             'create' => Pages\CreateSymptom::route('/create'),
             'edit' => Pages\EditSymptom::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::where('is_active', true)->count();
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }
