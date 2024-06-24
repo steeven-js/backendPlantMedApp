@@ -10,7 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Exports\SymptomeExporter;
+use App\Filament\Exports\SymptomExporter;
 use App\Filament\Resources\SymptomResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SymptomResource\RelationManagers;
@@ -127,7 +127,7 @@ class SymptomResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\ExportAction::make()
-                    ->exporter(SymptomeExporter::class)
+                    ->exporter(SymptomExporter::class)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

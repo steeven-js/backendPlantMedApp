@@ -19,59 +19,157 @@ class PlantMedResource extends Resource
 {
     protected static ?string $model = PlantMed::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-heart';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $navigationLabel = 'Plantes médicinales';
+
+    protected static ?string $modelLabel = 'Plantes médicinales';
+
+    protected static ?string $navigationGroup = 'Application';
+
+    protected static ?int $navigationSort = 0;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
-                    ->collection('image'),
-                Forms\Components\Select::make('symptoms')
-                    ->label('Symptoms')
-                    ->multiple()
-                    ->options(Symptom::all()->pluck('name', 'name'))
-                    ->searchable(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                    ->collection('images')
-                    ->multiple(),
-                Forms\Components\TextInput::make('nscient')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('famille')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('genre')
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('habitat')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('propriete')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('usageInterne')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('usageExterne')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('precaution')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('sources'),
-                Forms\Components\Toggle::make('is_featured')
-                    ->required(),
-                Forms\Components\Toggle::make('is_best_seller')
-                    ->required(),
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
-                Forms\Components\Toggle::make('is_available')
-                    ->required(),
-            ]);
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make('Informations')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->description('Informations générales sur la plante'),
+
+                        Forms\Components\Section::make('symptomes associés')
+                            ->schema([
+                                Forms\Components\Select::make('symptoms')
+                                    ->label('Symptoms')
+                                    ->multiple()
+                                    ->options(Symptom::all()->pluck('name', 'name'))
+                                    ->searchable(),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('description')
+                            ->schema([
+                                Forms\Components\Textarea::make('description')
+                                    ->label('description')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('Image')
+                            ->schema([
+                                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                                    ->collection('image')
+                                    ->hiddenLabel(),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('Images')
+                            ->schema([
+                                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                                    ->collection('images')
+                                    ->multiple()
+                                    ->maxFiles(5)
+                                    ->hiddenLabel(),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('habitat')
+                            ->schema([
+                                Forms\Components\Textarea::make('habitat')
+                                    ->label('Habitat')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('propriete')
+                            ->schema([
+                                Forms\Components\Textarea::make('propriete')
+                                    ->label('propriete')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('usageInterne')
+                            ->schema([
+                                Forms\Components\Textarea::make('usageInterne')
+                                    ->label('usageInterne')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('usageExterne')
+                            ->schema([
+                                Forms\Components\Textarea::make('usageExterne')
+                                    ->label('usageExterne')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('precaution')
+                            ->schema([
+                                Forms\Components\Textarea::make('precaution')
+                                    ->label('precaution')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+
+                        Forms\Components\Section::make('source')
+                            ->schema([
+                                Forms\Components\Textarea::make('source')
+                                    ->label('Source des informations')
+                                    ->rows(5)
+                                    ->cols(10),
+                            ])
+                            ->collapsible(),
+                    ])
+                    ->columnSpan(['lg' => 2]),
+
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make('Status de la plante')
+                            ->schema([
+                                Forms\Components\Toggle::make('is_active')
+                                    ->label('Visible')
+                                    ->helperText('Activer ou désactiver la plante pour la rendre visible ou non sur l\'application')
+                                    ->default(false),
+                            ]),
+
+                        Forms\Components\Section::make('Information scientifiques')
+                            ->schema([
+                                Forms\Components\TextInput::make('nscient'),
+                                Forms\Components\TextInput::make('famille'),
+                                Forms\Components\TextInput::make('genre'),
+                            ])->description('Informations scientifiques sur la plante'),
+
+                        Forms\Components\Section::make('Status de disponibilité')
+                            ->schema([
+                                Forms\Components\Toggle::make('is_featured')
+                                    ->label('Featured')
+                                    ->helperText('Marquer la plante comme étant en vedette')
+                                    ->default(false),
+                                Forms\Components\Toggle::make('is_best_seller')
+                                    ->label('Best seller')
+                                    ->helperText('Marquer la plante comme étant un best seller')
+                                    ->default(false),
+                            ]),
+                    ])
+                    ->columnSpan(['lg' => 1]),
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table

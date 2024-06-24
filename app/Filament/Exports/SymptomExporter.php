@@ -2,14 +2,14 @@
 
 namespace App\Filament\Exports;
 
-use App\Models\Symptome;
+use App\Models\Symptom;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
 
-class SymptomeExporter extends Exporter
+class SymptomExporter extends Exporter
 {
-    protected static ?string $model = Symptome::class;
+    protected static ?string $model = Symptom::class;
 
     public static function getColumns(): array
     {
@@ -17,8 +17,7 @@ class SymptomeExporter extends Exporter
             ExportColumn::make('id')
                 ->label('ID'),
             ExportColumn::make('name'),
-            ExportColumn::make('slug'),
-            ExportColumn::make('is_visible'),
+            ExportColumn::make('is_active'),
             ExportColumn::make('description'),
             ExportColumn::make('created_at'),
             ExportColumn::make('updated_at'),
