@@ -7,11 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
-class ImagePlantController extends Controller
+class ImagesPlantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // Définir le chemin du dossier contenant les images des plantes
@@ -41,11 +38,16 @@ class ImagePlantController extends Controller
                 // Débogage : Afficher le nom de la plante trouvée
                 // dd('Plante trouvée : ' . $plant->name);
 
-                // Ajouter le fichier image à la collection 'image' de Spatie Media Library
-                $plant->addMedia($file->getPathname())->toMediaCollection('image');
+                // Ajouter le fichier image à la collection 'images' de Spatie Media Library
+                $plant->addMedia($file->getPathname())->toMediaCollection('images');
 
-                // Mettre à jour l'attribut image
-                $plant->image = $plant->getImageAttribute();
+                // Urls des images de la collection 'images'
+                $urls = $plant->getMedia('images')->map(function ($item) {
+                    return $item->getUrl();
+                })->toArray();
+
+                // Enregistrer dans images le tableau des URLs
+                $plant->images = $urls;
 
                 // Sauvegarder les données
                 $plant->save();

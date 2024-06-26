@@ -87,4 +87,35 @@ class PlantMed extends Model implements HasMedia
         // Sauvegarder les données
         $plantmed->save();
     }
+
+    public function generateDefaultSourcesUrls()
+    {
+        $sources = $this->sources ?: [];
+        $baseUrl = "https://example.com/plantes/";
+        $slug = $this->generateSlug($this->name);
+
+        $defaultSource = [
+            'url' => $baseUrl . $slug,
+        ];
+
+        if (!in_array($defaultSource, $sources)) {
+            $sources[] = $defaultSource;
+        }
+
+        $this->sources = $sources;
+        $this->save();
+    }
+
+    private function generateSlug($name)
+    {
+        return strtolower(str_replace(' ', '-', $name));
+    }
+
+    public static function generateAllDefaultSourcesUrls()
+    {
+        $plants = self::all();
+        foreach ($plants as $plant) {
+            $plant->generateDefaultSourcesUrls();
+        }
+    }
 }

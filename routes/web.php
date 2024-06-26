@@ -19,3 +19,5 @@ Route::redirect('/', '/admin/login');
 Route::get('/test', [App\Http\Controllers\Tests\TestsController::class, 'index']);
 // Route::get('/test1', [App\Http\Controllers\Tests\SyptomByPlantController::class, 'index']);
 Route::get('/test2', [App\Http\Controllers\Tests\ImagePlantController::class, 'index']);
+Route::get('/test3', [App\Http\Controllers\Tests\ImagesPlantController::class, 'index']);
+Route::get('/test4', [App\Http\Controllers\Tests\TestsController::class, 'index']);
