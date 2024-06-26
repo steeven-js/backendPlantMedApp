@@ -128,14 +128,12 @@ class PlantMedResource extends Resource
                             ])
                             ->collapsible(),
 
-                        Forms\Components\Section::make('source')
+                        Forms\Components\Repeater::make('sources')
                             ->schema([
-                                Forms\Components\Textarea::make('source')
-                                    ->label('Source des informations')
-                                    ->rows(5)
-                                    ->cols(10),
+                                Forms\Components\TextInput::make('sources')
+                                    ->required(),
                             ])
-                            ->collapsible(),
+                            ->columns(2)
                     ])
                     ->columnSpan(['lg' => 2]),
 
