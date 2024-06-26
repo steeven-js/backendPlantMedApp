@@ -130,7 +130,7 @@ class PlantMedResource extends Resource
 
                         Forms\Components\Repeater::make('sources')
                             ->schema([
-                                Forms\Components\TextInput::make('sources')
+                                Forms\Components\TextInput::make('url')
                                     ->required(),
                             ])
                             ->columns(2)
