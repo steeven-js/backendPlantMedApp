@@ -7,13 +7,14 @@ use \App\Http\Controllers\ColorController;
 use \App\Http\Controllers\OrderController;
 use \App\Http\Controllers\PlantController;
 use \App\Http\Controllers\SlideController;
+use App\Http\Controllers\StripeController;
 use \App\Http\Controllers\BannerController;
 use \App\Http\Controllers\ReviewController;
-use \App\Http\Controllers\SymptomController;
 use \App\Http\Controllers\AppUserController;
 use \App\Http\Controllers\PotTypeController;
-use \App\Http\Controllers\PlantMedController;
+use \App\Http\Controllers\SymptomController;
 use \App\Http\Controllers\CategoryController;
+use \App\Http\Controllers\PlantMedController;
 use \App\Http\Controllers\PlantTypeController;
 use \App\Http\Controllers\PromocodeController;
 use \App\Http\Controllers\PromotionController;
@@ -49,6 +50,12 @@ Route::middleware('authApi')->group(function () {
     Route::post('/verify/otp/email', [AppUserController::class, 'verifyEmailOtp']);
 
     Route::delete('/user/delete/{userId}', [AppUserController::class, 'deleteUser']);
+
+    // Routes Stripe
+    Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
+    Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
+    Route::get('/stripe/cancel', [StripeController::class, 'handleCancel'])->name('stripe.cancel');
+    Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

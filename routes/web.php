@@ -17,12 +17,6 @@ use App\Http\Controllers\StripeController;
 
 Route::redirect('/', '/admin/login');
 
-// Routes Stripe
-Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
-Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
-Route::get('/stripe/cancel', [StripeController::class, 'handleCancel'])->name('stripe.cancel');
-Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
-
 Route::get('/test', [App\Http\Controllers\Tests\TestsController::class, 'index']);
 // Route::get('/test1', [App\Http\Controllers\Tests\SyptomByPlantController::class, 'index']);
 Route::get('/test2', [App\Http\Controllers\Tests\ImagePlantController::class, 'index']);
