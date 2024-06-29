@@ -17,6 +17,8 @@ class StripeController extends Controller
 
             $user = AppUser::find($request->userId);
 
+            $YOUR_DOMAIN = 'https://admin-plantmedapp.jsprod.fr';
+
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }
@@ -28,8 +30,8 @@ class StripeController extends Controller
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
-                'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('checkout.cancel'),
+                'success_url' => $YOUR_DOMAIN . '?success=true&session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => $YOUR_DOMAIN . '?canceled=true',
             ]);
 
             return response()->json(['url' => $session->url]);
