@@ -24,13 +24,12 @@ class StripeController extends Controller
             $session = Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [[
-                    'price' => env('STRIPE_PRICE_ID'),
+                    'price' => 'prod_QNXqArebYmTvPe', // ID du produit d'abonnement
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
-                'success_url' => route('stripe.success', ['session_id' => '{CHECKOUT_SESSION_ID}']),
-                'cancel_url' => route('stripe.cancel'),
-                'client_reference_id' => $user->id,
+                'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('checkout.cancel'),
             ]);
 
             return response()->json(['url' => $session->url]);
