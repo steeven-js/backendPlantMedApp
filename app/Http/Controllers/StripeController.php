@@ -12,63 +12,57 @@ class StripeController extends Controller
 {
     public function createCheckoutSession(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-        $userId = $request->input('userId');
-        $productId = env('STRIPE_PRODUCT_ID');
+            $user = AppUser::find($request->userId);
 
-        $user = AppUser::findOrFail($userId);
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
 
-        // Récupérez le prix par défaut pour ce produit
-        $product = \Stripe\Product::retrieve($productId);
-        $price = $product->default_price;
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price' => env('STRIPE_PRICE_ID'),
+                    'quantity' => 1,
+                ]],
+                'mode' => 'subscription',
+                'success_url' => route('stripe.success', ['session_id' => '{CHECKOUT_SESSION_ID}']),
+                'cancel_url' => route('stripe.cancel'),
+                'client_reference_id' => $user->id,
+            ]);
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price' => $price,
-                'quantity' => 1,
-            ]],
-            'mode' => 'subscription',
-            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('stripe.cancel'),
-            'client_reference_id' => $user->id,
-        ]);
-
-        return response()->json(['url' => $session->url]);
+            return response()->json(['url' => $session->url]);
+        } catch (\Exception $e) {
+            \Log::error('Stripe error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function handleSuccess(Request $request)
     {
+        $sessionId = $request->get('session_id');
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-        $session = Session::retrieve($request->get('session_id'));
-        $user = AppUser::findOrFail($session->client_reference_id);
+        $session = Session::retrieve($sessionId);
+        $userId = $session->client_reference_id;
 
-        // Mettre à jour l'utilisateur avec les informations d'abonnement
+        $user = AppUser::find($userId);
         $user->is_premium = true;
-        $user->premium_expires_at = Carbon::now()->addMonth();
-        $user->stripe_customer_id = $session->customer;
-        $user->stripe_subscription_id = $session->subscription;
+        $user->premium_ends_at = Carbon::now()->addMonth();
         $user->save();
 
-        return response()->json([
-            'message' => 'Abonnement premium activé avec succès',
-            'user' => $user
-        ]);
+        return response()->json(['success' => true, 'message' => 'Premium subscription activated']);
     }
 
-    public function handleCancel(Request $request)
+    public function handleCancel()
     {
-        return response()->json([
-            'message' => 'La procédure d\'abonnement a été annulée'
-        ]);
+        return response()->json(['success' => false, 'message' => 'Subscription cancelled']);
     }
 
     public function handleWebhook(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-
         $payload = $request->getContent();
         $sig_header = $request->header('Stripe-Signature');
         $event = null;
@@ -85,21 +79,16 @@ class StripeController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        switch ($event->type) {
-            case 'customer.subscription.deleted':
-            case 'customer.subscription.updated':
-                $subscription = $event->data->object;
-                $user = AppUser::where('stripe_subscription_id', $subscription->id)->first();
-                if ($user) {
-                    $user->is_premium = $subscription->status === 'active';
-                    $user->premium_expires_at = $subscription->status === 'active'
-                        ? Carbon::createFromTimestamp($subscription->current_period_end)
-                        : null;
-                    $user->save();
-                }
-                break;
+        if ($event->type == 'customer.subscription.deleted') {
+            $subscription = $event->data->object;
+            $user = AppUser::where('stripe_customer_id', $subscription->customer)->first();
+            if ($user) {
+                $user->is_premium = false;
+                $user->premium_ends_at = null;
+                $user->save();
+            }
         }
 
-        return response()->json(['status' => 'success']);
+        return response()->json(['success' => true]);
     }
 }

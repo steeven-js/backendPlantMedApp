@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "orchid/platform": "^14.18",
         "spatie/laravel-medialibrary": "^11.7",
+        "stripe/stripe-php": "^15.0",
         "vonage/client": "^4.0"
     },
     "require-dev": {
