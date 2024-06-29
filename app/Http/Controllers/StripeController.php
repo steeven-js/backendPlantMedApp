@@ -26,7 +26,7 @@ class StripeController extends Controller
             $session = Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [[
-                    'price' => 'prod_QNXqArebYmTvPe',
+                    'price' => env('STRIPE_PRICE_ID'),
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
