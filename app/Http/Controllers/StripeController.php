@@ -24,7 +24,7 @@ class StripeController extends Controller
             }
 
             $stripe->subscriptions->create([
-                'customer' => 'cus_Na6dX7aXxi11N4',
+                'customer' => 'cus_PfoIjWEleMu1Rp',
                 'items' => [['price' => 'price_1MowQULkdIwHu7ixraBm864M']],
             ]);
 
