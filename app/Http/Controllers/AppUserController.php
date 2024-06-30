@@ -322,29 +322,22 @@ class AppUserController extends Controller
 
         $user = AppUser::where('email', $request->email)->firstOrFail();
 
+        // Obtenir les informations de l'abonnement
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+        $subscription = $stripe->subscriptions->retrieve($request->subscriptionId);
+
+        // Obtenir current_period_end de l'abonnement
+        $current_period_end = $subscription->current_period_end;
+
+        // Transformer current_period_end en date
+        $stripe_current_period_end = date('Y-m-d H:i:s', $current_period_end);
+
         $user->update([
             'is_premium' => 1,
             'stripe_subscription_id' => $request->subscriptionId,
-            'premium_expires_at' => now()->addMonth(),
+            'premium_expires_at' => $stripe_current_period_end,
         ]);
 
         return response()->json(['message' => 'User subscription updated successfully']);
-    }
-
-    public function cancelSubscription(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:app_users,email',
-        ]);
-
-        $user = AppUser::where('email', $request->email)->firstOrFail();
-
-        $user->update([
-            'is_premium' => 0,
-            'stripe_subscription_id' => null,
-            'premium_expires_at' => null,
-        ]);
-
-        return response()->json(['message' => 'User subscription cancelled successfully']);
     }
 }

@@ -69,19 +69,9 @@ class StripeController extends Controller
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
         try {
+
             // Annuler l'abonnement
-
-            $stripe->subscriptions->cancel(
-                $user->stripe_subscription_id,
-                []
-            );
-
-            // Mettre à jour la base de données
-            $user->update([
-                'is_premium' => 0,
-                'stripe_subscription_id' => null,
-                'premium_expires_at' => null,
-            ]);
+            $stripe->subscriptions->cancel($user->stripe_subscription_id, []);
 
             return response()->json(['message' => 'Subscription cancelled successfully']);
         } catch (Exception $e) {
