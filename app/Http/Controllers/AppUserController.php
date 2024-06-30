@@ -323,9 +323,9 @@ class AppUserController extends Controller
         $user = AppUser::where('email', $request->email)->firstOrFail();
 
         $user->update([
-            'isPremium' => 1,
-            'stripeSubscriptionId' => $request->subscriptionId,
-            'premiumExpiresAt' => now()->addMonth(),
+            'is_premium' => 1,
+            'stripe_subscription_id' => $request->subscriptionId,
+            'premium_expires_at' => now()->addMonth(),
         ]);
 
         return response()->json(['message' => 'User subscription updated successfully']);
