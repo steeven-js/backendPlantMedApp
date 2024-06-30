@@ -21,31 +21,28 @@ class StripeController extends Controller
                 return response()->json(['error' => 'User not found'], 404);
             }
 
-            // Créer ou récupérer le client Stripe
-            $customer = $stripe->customers->create([
-                'email' => $user->email,
-                // Ajoutez d'autres détails du client si nécessaire
-            ]);
-
-            // Créer un PaymentIntent
+            // Créer un PaymentIntent pour la première facturation
             $paymentIntent = $stripe->paymentIntents->create([
                 'amount' => 199, // 1.99 en centimes
                 'currency' => 'eur',
-                'customer' => $customer->id,
+                'customer' => 'cus_Na6dX7aXxi11N4',
                 'automatic_payment_methods' => [
                     'enabled' => true,
                 ],
+                'metadata' => [
+                    'price_id' => 'price_1MowQULkdIwHu7ixraBm864M'
+                ]
             ]);
 
             // Créer une ephemeral key
             $ephemeralKey = $stripe->ephemeralKeys->create([
-                'customer' => $customer->id,
+                'customer' => 'cus_Na6dX7aXxi11N4',
             ], ['stripe_version' => '2020-08-27']);
 
             return response()->json([
                 'paymentIntent' => $paymentIntent->client_secret,
                 'ephemeralKey' => $ephemeralKey->secret,
-                'customer' => $customer->id,
+                'customer' => 'cus_Na6dX7aXxi11N4',
                 'publishableKey' => 'pk_test_51LeOHYBy39DOXZlGRv6tHgXPh93Q0wEpgvTbT6ASeEE7p0miCzLzZp3LRmZiCzk7ids8vFrGQjjlNFLsub3wyVnC00cvQ0H2eI'
             ]);
         } catch (\Exception $e) {
