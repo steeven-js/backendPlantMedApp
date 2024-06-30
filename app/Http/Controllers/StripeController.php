@@ -16,21 +16,16 @@ class StripeController extends Controller
         // Récupérer l'utilisateur
         $user = AppUser::findOrFail($request->email);
 
+        $stripe_customer_id = $user->stripe_customer_id;
+
         // Configurer Stripe
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         try {
             // Créer la session Checkout
-            $session = Session::create([
-                'payment_method_types' => ['card'],
-                'customer_email' => $user->email,
-                'line_items' => [[
-                    'price' => 'price_1PWmkYBy39DOXZlGuWibG01o',
-                    'quantity' => 1,
-                ]],
-                'mode' => 'subscription',
-                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('subscription.cancel'),
+            $stripe->subscriptions->create([
+                'customer' => $stripe_customer_id,
+                'items' => [['price' => 'price_1PWmkYBy39DOXZlGuWibG01o']],
             ]);
 
             // Retourner l'ID de la session
