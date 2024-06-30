@@ -25,7 +25,7 @@ class StripeController extends Controller
 
             $stripe->subscriptions->create([
                 'customer' => 'cus_PfoIjWEleMu1Rp',
-                'items' => [['price' => 'price_1PWmkYBy39DOXZlGuWibG01']],
+                'items' => [['price' => 'prod_QNXqArebYmTvPe']],
             ]);
 
             return response()->json(['url' => $session->url]);
