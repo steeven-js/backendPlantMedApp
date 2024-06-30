@@ -330,4 +330,21 @@ class AppUserController extends Controller
 
         return response()->json(['message' => 'User subscription updated successfully']);
     }
+
+    public function cancelSubscription(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:app_users,email',
+        ]);
+
+        $user = AppUser::where('email', $request->email)->firstOrFail();
+
+        $user->update([
+            'is_premium' => 0,
+            'stripe_subscription_id' => null,
+            'premium_expires_at' => null,
+        ]);
+
+        return response()->json(['message' => 'User subscription cancelled successfully']);
+    }
 }
