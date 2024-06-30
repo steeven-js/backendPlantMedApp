@@ -92,7 +92,7 @@ class StripeController extends Controller
         try {
             $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
 
-            $user = AppUser::find($request->userId);
+            $user = AppUser::where('email', $request->email)->first();
 
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
