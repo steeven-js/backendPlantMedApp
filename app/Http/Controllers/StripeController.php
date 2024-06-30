@@ -11,6 +11,32 @@ use Exception;
 
 class StripeController extends Controller
 {
+    public function findSubscription(Request $request)
+    {
+        // Valider la requête
+        $request->validate([
+            'email' => 'required|email|exists:app_users,email',
+        ]);
+
+        // Récupérer l'utilisateur
+        $user = AppUser::where('email', $request->email)->firstOrFail();
+
+        // Configurer Stripe
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        try {
+            // Récupérer l'abonnement
+            $subscription = Subscription::retrieve($user->stripe_subscription_id);
+
+            // Retourner les informations nécessaires pour le front-end
+            return response()->json([
+                'subscription' => $subscription,
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function createSubscription(Request $request)
     {
         // Valider la requête
