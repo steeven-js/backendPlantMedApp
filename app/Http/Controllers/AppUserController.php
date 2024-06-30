@@ -55,7 +55,8 @@ class AppUserController extends Controller
         $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
 
         $customer = $stripe->customers->create([
-            'email' => $user->email,
+            'name' => $name,
+            'email' => $email,
         ]);
 
         $user->stripe_customer_id = $customer->id;
