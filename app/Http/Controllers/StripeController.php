@@ -13,7 +13,7 @@ class StripeController extends Controller
     public function createCheckoutSession(Request $request)
     {
         try {
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
 
             $user = AppUser::find($request->userId);
 
@@ -23,15 +23,9 @@ class StripeController extends Controller
                 return response()->json(['error' => 'User not found'], 404);
             }
 
-            $session = Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price' => env('STRIPE_PRICE_ID'),
-                    'quantity' => 1,
-                ]],
-                'mode' => 'subscription',
-                'success_url' => $YOUR_DOMAIN . '?success=true&session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => $YOUR_DOMAIN . '?canceled=true',
+            $stripe->subscriptions->create([
+                'customer' => 'cus_Na6dX7aXxi11N4',
+                'items' => [['price' => 'price_1MowQULkdIwHu7ixraBm864M']],
             ]);
 
             return response()->json(['url' => $session->url]);
