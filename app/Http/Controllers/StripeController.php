@@ -66,11 +66,12 @@ class StripeController extends Controller
         $user = AppUser::where('email', $request->email)->firstOrFail();
 
         // Configurer Stripe
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
         try {
             // Annuler l'abonnement
-            $subscription = Subscription::cancel(
+
+            $stripe->subscriptions->cancel(
                 $user->stripe_subscription_id,
                 []
             );
