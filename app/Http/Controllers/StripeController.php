@@ -86,4 +86,29 @@ class StripeController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function createStripeCustomer(Request $request)
+    {
+        try {
+            $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
+
+            $user = AppUser::find($request->userId);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            $customer = $stripe->customers->create([
+                'email' => $user->email,
+            ]);
+
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+
+            return response()->json(['success' => true, 'message' => 'Customer created']);
+        } catch (\Exception $e) {
+            \Log::error('Stripe error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

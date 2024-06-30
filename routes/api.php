@@ -52,6 +52,8 @@ Route::middleware('authApi')->group(function () {
     Route::delete('/user/delete/{userId}', [AppUserController::class, 'deleteUser']);
 
     // Routes Stripe
+    Route::post('/create-stripe-customer', [StripeController::class, 'createStripeCustomer']);
+
     Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
     Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
     Route::get('/stripe/cancel', [StripeController::class, 'handleCancel'])->name('stripe.cancel');
