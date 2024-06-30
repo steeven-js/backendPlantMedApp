@@ -51,17 +51,6 @@ class AppUserController extends Controller
             'name' => $name, 'email' => $email, 'password' => $password,
         ]);
 
-        // Stripe subscription
-        $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
-
-        $customer = $stripe->customers->create([
-            'name' => $name,
-            'email' => $email,
-        ]);
-
-        $user->stripe_customer_id = $customer->id;
-        $user->save();
-
         return response()->json([
             'message' => 'User created successfully',
             'user' => $appUser,
