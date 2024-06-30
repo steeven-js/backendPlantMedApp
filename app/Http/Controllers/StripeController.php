@@ -22,11 +22,24 @@ class StripeController extends Controller
         $user = AppUser::where('email', $request->email)->firstOrFail();
 
         // Configurer Stripe
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
         try {
             // Récupérer l'abonnement
-            $subscription = Subscription::retrieve($user->stripe_subscription_id);
+            $subscription = $stripe->subscriptions->retrieve($user->stripe_subscription_id);
+
+            // Vérifier si la date de fin de l'abonnement est dépassée
+            if ($subscription->current_period_end < time()) {
+                // Annuler l'abonnement
+                $stripe->subscriptions->cancel($user->stripe_subscription_id, []);
+
+                // Mettre à jour les informations de l'utilisateur
+                $user->update([
+                    'is_premium' => 0,
+                    'stripe_subscription_id' => null,
+                    'premium_expires_at' => null,
+                ]);
+            }
 
             // Retourner les informations nécessaires pour le front-end
             return response()->json([
@@ -95,11 +108,12 @@ class StripeController extends Controller
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
         try {
+            // Annuler le renouvellement automatique de l'abonnement
+            $stripe->subscriptions->update($user->stripe_subscription_id, [
+                'cancel_at_period_end' => true,
+            ]);
 
-            // Annuler l'abonnement
-            $stripe->subscriptions->cancel($user->stripe_subscription_id, []);
-
-            return response()->json(['message' => 'Subscription cancelled successfully']);
+            return response()->json(['message' => 'Auto-renewal cancelled successfully']);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
