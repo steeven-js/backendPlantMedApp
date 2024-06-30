@@ -17,18 +17,37 @@ class StripeController extends Controller
 
             $user = AppUser::find($request->userId);
 
-            $YOUR_DOMAIN = 'https://admin-plantmedapp.jsprod.fr';
-
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }
 
-            $stripe->subscriptions->create([
-                'customer' => 'cus_PfoIjWEleMu1Rp',
-                'items' => [['price' => 'price_1PWmkYBy39DOXZlGuWibG01o']],
+            // Créer ou récupérer le client Stripe
+            $customer = $stripe->customers->create([
+                'email' => $user->email,
+                // Ajoutez d'autres détails du client si nécessaire
             ]);
 
-            return response()->json(['url' => $session->url]);
+            // Créer un PaymentIntent
+            $paymentIntent = $stripe->paymentIntents->create([
+                'amount' => 199, // 1.99 en centimes
+                'currency' => 'eur',
+                'customer' => $customer->id,
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+            ]);
+
+            // Créer une ephemeral key
+            $ephemeralKey = $stripe->ephemeralKeys->create([
+                'customer' => $customer->id,
+            ], ['stripe_version' => '2020-08-27']);
+
+            return response()->json([
+                'paymentIntent' => $paymentIntent->client_secret,
+                'ephemeralKey' => $ephemeralKey->secret,
+                'customer' => $customer->id,
+                'publishableKey' => 'pk_test_51LeOHYBy39DOXZlGRv6tHgXPh93Q0wEpgvTbT6ASeEE7p0miCzLzZp3LRmZiCzk7ids8vFrGQjjlNFLsub3wyVnC00cvQ0H2eI'
+            ]);
         } catch (\Exception $e) {
             \Log::error('Stripe error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
