@@ -312,4 +312,22 @@ class AppUserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
+
+    public function updateSubscription(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:app_users,email',
+            'subscriptionId' => 'required|string',
+        ]);
+
+        $user = AppUser::where('email', $request->email)->firstOrFail();
+
+        $user->update([
+            'isPremium' => 1,
+            'stripeSubscriptionId' => $request->subscriptionId,
+            'premiumExpiresAt' => now()->addMonth(),
+        ]);
+
+        return response()->json(['message' => 'User subscription updated successfully']);
+    }
 }

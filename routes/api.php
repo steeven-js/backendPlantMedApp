@@ -53,6 +53,7 @@ Route::middleware('authApi')->group(function () {
 
     // Routes Stripe
     Route::post('/create-stripe-customer', [StripeController::class, 'createStripeCustomer']);
+    Route::post('/update-user-subscription', [AppUserController::class, 'updateSubscription']);
 
     Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
     Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
