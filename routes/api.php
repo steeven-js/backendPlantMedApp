@@ -53,10 +53,10 @@ Route::middleware('authApi')->group(function () {
 
     // Routes Stripe
     Route::post('/create-stripe-customer', [StripeController::class, 'createStripeCustomer']);
-    Route::post('/update-user-subscription', [AppUserController::class, 'updateStripeSubscription']);
+    Route::patch('/update-user-subscription', [AppUserController::class, 'updateSubscription']);
 
     Route::post('/create-checkout-session', [StripeController::class, 'createSubscription']);
-    Route::post('/cancel-checkout-session', [StripeController::class, 'cancelSubscription']);
+    Route::delete('/cancel-checkout-session', [StripeController::class, 'cancelSubscription']);
     Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
     Route::get('/stripe/cancel', [StripeController::class, 'handleCancel'])->name('stripe.cancel');
     Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
