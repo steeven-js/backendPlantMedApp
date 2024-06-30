@@ -57,10 +57,17 @@ class StripeController extends Controller
 
     public function cancelSubscription(Request $request)
     {
+        \Log::info('Received cancel subscription request', ['email' => $request->email]);
+
         // Valider la requête
-        $request->validate([
-            'email' => 'required|email|exists:app_users,email',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:app_users,email',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed', ['errors' => $e->errors()]);
+            return response()->json(['error' => $e->errors()], 422);
+        }
 
         // Récupérer l'utilisateur
         $user = AppUser::where('email', $request->email)->firstOrFail();
@@ -70,8 +77,10 @@ class StripeController extends Controller
 
         try {
             // Annuler l'abonnement
-            $subscription = Subscription::retrieve($user->stripe_subscription_id);
-            $subscription->cancel();
+            $subscription = Subscription::cancel(
+                $user->stripe_subscription_id,
+                ['prorate' => true]
+            );
 
             // Mettre à jour la base de données
             $user->update([
