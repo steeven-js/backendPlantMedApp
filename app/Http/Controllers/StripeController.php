@@ -12,118 +12,30 @@ class StripeController extends Controller
 {
     public function createCheckoutSession(Request $request)
     {
-        try {
-            $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
 
-            $user = AppUser::find($request->userId);
+        // Récupérer l'utilisateur
+        $user = AppUser::findOrFail($request->email);
 
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            // Créer un PaymentIntent pour la première facturation
-            $paymentIntent = $stripe->paymentIntents->create([
-                'amount' => 199, // 1.99 en centimes
-                'currency' => 'eur',
-                'customer' => 'cus_Na6dX7aXxi11N4',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                ],
-                'metadata' => [
-                    'price_id' => 'price_1MowQULkdIwHu7ixraBm864M'
-                ]
-            ]);
-
-            // Créer une ephemeral key
-            $ephemeralKey = $stripe->ephemeralKeys->create([
-                'customer' => 'cus_Na6dX7aXxi11N4',
-            ], ['stripe_version' => '2020-08-27']);
-
-            return response()->json([
-                'paymentIntent' => $paymentIntent->client_secret,
-                'ephemeralKey' => $ephemeralKey->secret,
-                'customer' => 'cus_Na6dX7aXxi11N4',
-                'publishableKey' => 'pk_test_51LeOHYBy39DOXZlGRv6tHgXPh93Q0wEpgvTbT6ASeEE7p0miCzLzZp3LRmZiCzk7ids8vFrGQjjlNFLsub3wyVnC00cvQ0H2eI'
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Stripe error: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function handleSuccess(Request $request)
-    {
-        $sessionId = $request->get('session_id');
+        // Configurer Stripe
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-        $session = Session::retrieve($sessionId);
-        $userId = $session->client_reference_id;
-
-        $user = AppUser::find($userId);
-        $user->is_premium = true;
-        $user->premium_ends_at = Carbon::now()->addMonth();
-        $user->save();
-
-        return response()->json(['success' => true, 'message' => 'Premium subscription activated']);
-    }
-
-    public function handleCancel()
-    {
-        return response()->json(['success' => false, 'message' => 'Subscription cancelled']);
-    }
-
-    public function handleWebhook(Request $request)
-    {
-        $payload = $request->getContent();
-        $sig_header = $request->header('Stripe-Signature');
-        $event = null;
-
         try {
-            $event = \Stripe\Webhook::constructEvent(
-                $payload,
-                $sig_header,
-                env('STRIPE_WEBHOOK_SECRET')
-            );
-        } catch (\UnexpectedValueException $e) {
-            return response()->json(['error' => 'Invalid payload'], 400);
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            return response()->json(['error' => 'Invalid signature'], 400);
-        }
-
-        if ($event->type == 'customer.subscription.deleted') {
-            $subscription = $event->data->object;
-            $user = AppUser::where('stripe_customer_id', $subscription->customer)->first();
-            if ($user) {
-                $user->is_premium = false;
-                $user->premium_ends_at = null;
-                $user->save();
-            }
-        }
-
-        return response()->json(['success' => true]);
-    }
-
-    public function createStripeCustomer(Request $request)
-    {
-        try {
-            $stripe = new \Stripe\StripeClient('sk_test_51LeOHYBy39DOXZlGW09bx55BbH1bl4HiaBQbUKUns3aW94VFvRowCJUx8b7gohpOWSe7g4ms1y57H3AAub444zsX00ehwupWiB');
-
-            $user = AppUser::where('email', $request->email)->first();
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            $customer = $stripe->customers->create([
-                'email' => $user->email,
+            // Créer la session Checkout
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'customer_email' => $user->email,
+                'line_items' => [[
+                    'price' => 'price_1PWmkYBy39DOXZlGuWibG01o',
+                    'quantity' => 1,
+                ]],
+                'mode' => 'subscription',
+                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('subscription.cancel'),
             ]);
 
-            $user->stripe_customer_id = $customer->id;
-            $user->save();
-
-            return response()->json(['success' => true, 'message' => 'Customer created']);
+            // Retourner l'ID de la session
+            return response()->json(['id' => $session->id]);
         } catch (\Exception $e) {
-            \Log::error('Stripe error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
