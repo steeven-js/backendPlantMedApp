@@ -11,7 +11,7 @@ use Exception;
 
 class StripeController extends Controller
 {
-    public function findSubscription(Request $request)
+    public function stripeSubscription(Request $request)
     {
         // Valider la requête
         $request->validate([
