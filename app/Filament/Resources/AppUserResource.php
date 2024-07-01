@@ -51,9 +51,9 @@ class AppUserResource extends Resource
                 Forms\Components\Toggle::make('phone_verified')
                     ->required(),
                 Forms\Components\DateTimePicker::make('phone_otp_expires_at'),
-                Forms\Components\Toggle::make('is_premium')
+                Forms\Components\Toggle::make('is_prenium')
                     ->required(),
-                Forms\Components\DateTimePicker::make('premium_expires_at'),
+                Forms\Components\DateTimePicker::make('prenium_expires_at'),
                 Forms\Components\TextInput::make('stripe_customer_id')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('stripe_subscription_id')
@@ -95,9 +95,9 @@ class AppUserResource extends Resource
                 Tables\Columns\TextColumn::make('phone_otp_expires_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_premium')
+                Tables\Columns\IconColumn::make('is_prenium')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('premium_expires_at')
+                Tables\Columns\TextColumn::make('prenium_expires_at')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stripe_customer_id')

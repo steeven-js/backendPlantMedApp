@@ -35,9 +35,9 @@ class StripeController extends Controller
 
                 // Mettre à jour les informations de l'utilisateur
                 $user->update([
-                    'is_premium' => 0,
+                    'is_prenium' => 0,
                     'stripe_subscription_id' => null,
-                    'premium_expires_at' => null,
+                    'prenium_expires_at' => null,
                     'stripe' => null,
                 ]);
 
@@ -68,9 +68,9 @@ class StripeController extends Controller
             // Enregistrer dans AppUser Stripe les informations utiles de l'abonnement
             $user->update([
                 'stripe' => json_encode($customSubscription),
-                'is_premium' => 1,
+                'is_prenium' => 1,
                 'current_period_start' => $subscription->current_period_start,
-                'premium_expires_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
+                'prenium_expires_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
             ]);
 
             // Retourner les informations nécessaires pour le front-end

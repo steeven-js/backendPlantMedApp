@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('app_users', function (Blueprint $table) {
             // Colonnes pour l'abonnement
-            $table->boolean('is_premium')->default(false);
-            $table->timestamp('premium_expires_at')->nullable();
+            $table->boolean('is_prenium')->default(false);
+            $table->timestamp('prenium_expires_at')->nullable();
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
         });
@@ -27,8 +27,8 @@ return new class extends Migration
     {
         Schema::table('app_users', function (Blueprint $table) {
             // Colonnes pour l'abonnement
-            $table->boolean('is_premium')->default(false);
-            $table->timestamp('premium_expires_at')->nullable();
+            $table->boolean('is_prenium')->default(false);
+            $table->timestamp('prenium_expires_at')->nullable();
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
         });

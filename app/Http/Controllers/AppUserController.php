@@ -336,9 +336,9 @@ class AppUserController extends Controller
         $stripe_current_period_end = date('Y-m-d H:i:s', $current_period_end);
 
         $user->update([
-            'is_premium' => 1,
+            'is_prenium' => 1,
             'stripe_subscription_id' => $request->subscriptionId,
-            'premium_expires_at' => $stripe_current_period_end,
+            'prenium_expires_at' => $stripe_current_period_end,
             'cancel_at_period_end' => $subscription->cancel_at_period_end,
         ]);
 
