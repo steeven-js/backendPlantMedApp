@@ -27,6 +27,7 @@ class StripeController extends Controller
         try {
             // Récupérer l'abonnement
             $subscription = $stripe->subscriptions->retrieve($user->stripe_subscription_id);
+
             // Vérifier si la date de fin de l'abonnement est dépassée
             if ($subscription->current_period_end < time()) {
                 // Annuler l'abonnement
@@ -37,12 +38,43 @@ class StripeController extends Controller
                     'is_premium' => 0,
                     'stripe_subscription_id' => null,
                     'premium_expires_at' => null,
+                    'stripe' => null,
+                ]);
+
+                return response()->json([
+                    'subscription' => null,
+                    'time' => time(),
                 ]);
             }
 
+            // Créer un JSON personnalisé avec les informations essentielles
+            $customSubscription = [
+                'id' => $subscription->id,
+                'status' => $subscription->status,
+                'current_period_start' => $subscription->current_period_start,
+                'current_period_end' => $subscription->current_period_end,
+                'cancel_at_period_end' => $subscription->cancel_at_period_end,
+                'cancel_at' => $subscription->cancel_at,
+                'canceled_at' => $subscription->canceled_at,
+                'plan' => [
+                    'id' => $subscription->plan->id,
+                    'amount' => $subscription->plan->amount,
+                    'currency' => $subscription->plan->currency,
+                    'interval' => $subscription->plan->interval,
+                    'interval_count' => $subscription->plan->interval_count,
+                ],
+            ];
+
+            // Enregistrer dans AppUser Stripe les informations utiles de l'abonnement
+            $user->update([
+                'stripe' => json_encode($customSubscription),
+                'is_premium' => 1,
+                'premium_expires_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
+            ]);
+
             // Retourner les informations nécessaires pour le front-end
             return response()->json([
-                'subscription' => $subscription,
+                'subscription' => $customSubscription,
                 'time' => time(),
             ]);
         } catch (Exception $e) {

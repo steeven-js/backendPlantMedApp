@@ -31,6 +31,7 @@ class AppUser extends Model
     protected $fillable = [
         'name',
         'email',
+        'stripe',
         'password',
         'is_premium',
         'premium_expires_at',
