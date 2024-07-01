@@ -41,6 +41,7 @@ class CheckSubscriptions extends Command
                         $user->update([
                             'is_premium' => 1,
                             'premium_expires_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
+                            'cancel_at_period_end' => $subscription->cancel_at_period_end,
                             'stripe' => json_encode($customSubscription),
                         ]);
                     } else {
@@ -48,6 +49,7 @@ class CheckSubscriptions extends Command
                             'is_premium' => 0,
                             'premium_expires_at' => null,
                             'stripe_subscription_id' => null,
+                            'cancel_at_period_end' => true,
                             'stripe' => null,
                         ]);
                     }

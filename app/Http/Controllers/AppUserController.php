@@ -329,6 +329,9 @@ class AppUserController extends Controller
         // Obtenir current_period_end de l'abonnement
         $current_period_end = $subscription->current_period_end;
 
+        // Obtenir current_period_start de l'abonnement
+        $cancel_at_period_end = $subscription->cancel_at_period_end;
+
         // Transformer current_period_end en date
         $stripe_current_period_end = date('Y-m-d H:i:s', $current_period_end);
 
@@ -336,6 +339,7 @@ class AppUserController extends Controller
             'is_premium' => 1,
             'stripe_subscription_id' => $request->subscriptionId,
             'premium_expires_at' => $stripe_current_period_end,
+            'cancel_at_period_end' => $subscription->cancel_at_period_end,
         ]);
 
         return response()->json(['message' => 'User subscription updated successfully']);

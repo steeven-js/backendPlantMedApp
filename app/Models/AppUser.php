@@ -26,6 +26,7 @@ class AppUser extends Model
         'password',
         'phone_otp_expires_at',
         'email_otp_expires_at',
+        'stripe',
     ];
 
     protected $fillable = [
@@ -36,6 +37,7 @@ class AppUser extends Model
         'is_premium',
         'premium_expires_at',
         'stripe_customer_id',
+        'cancel_at_period_end',
         'stripe_subscription_id',
     ];
 

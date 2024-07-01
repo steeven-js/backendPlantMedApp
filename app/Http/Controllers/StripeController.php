@@ -69,6 +69,7 @@ class StripeController extends Controller
             $user->update([
                 'stripe' => json_encode($customSubscription),
                 'is_premium' => 1,
+                'current_period_start' => $subscription->current_period_start,
                 'premium_expires_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
             ]);
 
