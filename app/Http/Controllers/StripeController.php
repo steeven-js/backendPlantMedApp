@@ -27,7 +27,6 @@ class StripeController extends Controller
         try {
             // Récupérer l'abonnement
             $subscription = $stripe->subscriptions->retrieve($user->stripe_subscription_id);
-            dd(time());
             // Vérifier si la date de fin de l'abonnement est dépassée
             if ($subscription->current_period_end < time()) {
                 // Annuler l'abonnement
