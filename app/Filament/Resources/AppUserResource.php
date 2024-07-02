@@ -51,13 +51,15 @@ class AppUserResource extends Resource
                 Forms\Components\Toggle::make('phone_verified')
                     ->required(),
                 Forms\Components\DateTimePicker::make('phone_otp_expires_at'),
-                Forms\Components\Toggle::make('is_prenium')
+                Forms\Components\Toggle::make('is_premium')
                     ->required(),
-                Forms\Components\DateTimePicker::make('prenium_expires_at'),
+                Forms\Components\DateTimePicker::make('premium_expires_at'),
                 Forms\Components\TextInput::make('stripe_customer_id')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('stripe_subscription_id')
                     ->maxLength(255),
+                Forms\Components\TextInput::make('stripe'),
+                Forms\Components\Toggle::make('cancel_at_period_end'),
             ]);
     }
 
@@ -95,15 +97,17 @@ class AppUserResource extends Resource
                 Tables\Columns\TextColumn::make('phone_otp_expires_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_prenium')
+                Tables\Columns\IconColumn::make('is_premium')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('prenium_expires_at')
+                Tables\Columns\TextColumn::make('premium_expires_at')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stripe_customer_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('stripe_subscription_id')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('cancel_at_period_end')
+                    ->boolean(),
             ])
             ->filters([
                 //

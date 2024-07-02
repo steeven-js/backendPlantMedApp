@@ -34,10 +34,9 @@ class SlideResource extends Resource
                 Forms\Components\TextInput::make('title_line_1')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('title_line_2')
-                    ->options(PlantMed::all()->pluck('name', 'name'))
-                    ->searchable()
-                    ->required(),
+                Forms\Components\TextInput::make('title_line_2')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
