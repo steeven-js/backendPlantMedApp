@@ -180,6 +180,31 @@ class PlantMedResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Image')
+                    ->collection('image'),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->sortable()
+                    ->toggleable()
+                    ->label('Visible'),
+                Tables\Columns\TextColumn::make('nscient')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('famille')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('genre')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('is_featured')
+                    ->sortable()
+                    ->toggleable()
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('is_best_seller')
+                    ->sortable()
+                    ->toggleable()
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -188,25 +213,6 @@ class PlantMedResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
-                    ->label('Image')
-                    ->collection('image'),
-                Tables\Columns\TextColumn::make('nscient')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('famille')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('genre')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_featured')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_best_seller')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_available')
-                    ->boolean(),
             ])
             ->filters([
                 //
@@ -218,7 +224,8 @@ class PlantMedResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->description('Les plantes médicinales sont des plantes utilisées pour leurs propriétés thérapeutiques, qu\'elles soient utilisées sous forme de tisanes, de décoctions, de teintures, de gélules, d\'extraits, etc. Elles peuvent être utilisées seules ou en association avec d\'autres plantes. Elles sont utilisées pour leurs propriétés médicinales, mais aussi pour leurs propriétés aromatiques et gustatives.');
     }
 
     public static function getRelations(): array
