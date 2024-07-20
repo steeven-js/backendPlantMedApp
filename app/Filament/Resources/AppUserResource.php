@@ -117,4 +117,14 @@ class AppUserResource extends Resource
             'edit' => Pages\EditAppUser::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::all()->count();
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
