@@ -12,11 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('app_users', function (Blueprint $table) {
-            $table->boolean('is_prenium')->after('phone_otp_expires_at')->default(false)->nullable(false);
-            $table->string('transactionDate')->nullable()->after('is_prenium');
-            $table->string('transactionId')->nullable()->after('transactionDate');
-            $table->string('transactionReceipt')->nullable()->after('transactionId');
-            $table->string('productId')->nullable()->after('transactionReceipt');
+            $table->boolean('is_prenium')->after('phone_otp_expires_at')->default(false)->nullable();
+            $table->json('subscription_info')->nullable();
         });
 
     }
@@ -27,11 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('app_users', function (Blueprint $table) {
-            $table->boolean('is_prenium')->after('phone_otp_expires_at')->default(false)->nullable(false);
-            $table->string('transactionDate')->nullable()->after('is_prenium');
-            $table->string('transactionId')->nullable()->after('transactionDate');
-            $table->string('transactionReceipt')->nullable()->after('transactionId');
-            $table->string('productId')->nullable()->after('transactionReceipt');
+            $table->boolean('is_prenium')->after('phone_otp_expires_at')->default(false)->nullable();
+            $table->json('subscription_info')->nullable();
         });
 
     }
