@@ -51,16 +51,7 @@ Route::middleware('authApi')->group(function () {
     Route::post('/verify/otp/email', [AppUserController::class, 'verifyEmailOtp']);
 
     Route::delete('/user/delete/{userId}', [AppUserController::class, 'deleteUser']);
-    // Route::patch('/update-user-subscription', [AppUserController::class, 'updateSubscription']);
-
-    // Routes Stripe
-    // Route::post('/user-stripe-subscription', [StripeController::class, 'stripeSubscription']);
-    // Route::post('/create-stripe-customer', [StripeController::class, 'createStripeCustomer']);
-    // Route::post('/create-checkout-session', [StripeController::class, 'createSubscription']);
-    // Route::delete('/cancel-checkout-session', [StripeController::class, 'cancelSubscription']);
-    // Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
-    // Route::get('/stripe/cancel', [StripeController::class, 'handleCancel'])->name('stripe.cancel');
-    // Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
+    Route::put('/update-user-is-prenium/{userId}', [AppUserController::class, 'isPremium']);
 
     Route::post('/validate-receipt', [PurchaseVerificationController::class, 'validateReceipt']);
 });

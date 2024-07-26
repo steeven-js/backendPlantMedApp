@@ -313,35 +313,21 @@ class AppUserController extends Controller
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
 
-    public function updateSubscription(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:app_users,email',
-            'subscriptionId' => 'required|string',
-        ]);
+    public function isPremium(Request $request, $id){
 
-        $user = AppUser::where('email', $request->email)->firstOrFail();
+        $user = AppUser::find($id);
 
-        // Obtenir les informations de l'abonnement
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
-        $subscription = $stripe->subscriptions->retrieve($request->subscriptionId);
+        if ($user === null) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
-        // Obtenir current_period_end de l'abonnement
-        $current_period_end = $subscription->current_period_end;
+        $user->is_prenium = $request->is_premium;
+        $user->subscription_info = json_encode($request->subscription_info);
+        $user->save();
 
-        // Obtenir current_period_start de l'abonnement
-        $cancel_at_period_end = $subscription->cancel_at_period_end;
-
-        // Transformer current_period_end en date
-        $stripe_current_period_end = date('Y-m-d H:i:s', $current_period_end);
-
-        $user->update([
-            'is_prenium' => 1,
-            'stripe_subscription_id' => $request->subscriptionId,
-            'prenium_expires_at' => $stripe_current_period_end,
-            'cancel_at_period_end' => $subscription->cancel_at_period_end,
-        ]);
-
-        return response()->json(['message' => 'User subscription updated successfully']);
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user,
+        ], 200);
     }
 }

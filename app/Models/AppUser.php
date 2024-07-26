@@ -26,12 +26,15 @@ class AppUser extends Model
         'password',
         'phone_otp_expires_at',
         'email_otp_expires_at',
+        'subscription_info'
     ];
 
     protected $fillable = [
         'name',
         'email',
         'password',
+        'is_prenium',
+        'subscription_info',
     ];
 
     protected $allowedSorts = [
