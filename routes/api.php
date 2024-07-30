@@ -21,6 +21,8 @@ use \App\Http\Controllers\PromotionController;
 use App\Http\Controllers\PurchaseVerificationController;
 
 Route::middleware('authApi')->group(function () {
+    Route::get('/users', [AppUserController::class, 'index']);
+    Route::post('/user-by-email', [AppUserController::class, 'findUserByEmail']);
     Route::get('/plants', [PlantController::class, 'index']);
     Route::get('/plantmed', [PlantMedController::class, 'index']);
     Route::get('/slides', [SlideController::class, 'index']);

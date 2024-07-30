@@ -10,6 +10,12 @@ use App\Notifications\VerifyEmailWithOTP;
 
 class AppUserController extends Controller
 {
+    public function index()
+    {
+        $users = AppUser::all();
+
+        return response()->json($users);
+    }
 
     public function show($id)
     {
@@ -327,6 +333,26 @@ class AppUserController extends Controller
 
         return response()->json([
             'message' => 'User updated successfully',
+            'user' => $user,
+        ], 200);
+    }
+
+    public function findUserByEmail(Request $request)
+    {
+        $email = $request->email;
+
+        if (!$email) {
+            return response()->json(['message' => 'Email is required.'], 422);
+        }
+
+        $user = AppUser::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        return response()->json([
+            'message' => 'User found!',
             'user' => $user,
         ], 200);
     }

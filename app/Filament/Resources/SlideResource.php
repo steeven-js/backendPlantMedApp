@@ -26,7 +26,8 @@ class SlideResource extends Resource
         return $form
             ->schema([
                 Forms\Components\SpatieMediaLibraryFileUpload::make('image')
-                    ->collection('image'),
+                ->collection('image')
+                ->required(),
                 Forms\Components\Select::make('promotion')
                     ->options(Promotion::all()->pluck('name', 'name'))
                     ->searchable()
