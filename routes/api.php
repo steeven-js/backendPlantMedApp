@@ -25,6 +25,7 @@ Route::middleware('authApi')->group(function () {
     Route::post('/user-by-email', [AppUserController::class, 'findUserByEmail']);
     Route::get('/plants', [PlantController::class, 'index']);
     Route::get('/plantmed', [PlantMedController::class, 'index']);
+    Route::get('/plantmed/{plantmedId}', [PlantMedController::class, 'show']);
     Route::get('/slides', [SlideController::class, 'index']);
     Route::get('/colors', [ColorController::class, 'index']);
     Route::get('/banners', [BannerController::class, 'index']);

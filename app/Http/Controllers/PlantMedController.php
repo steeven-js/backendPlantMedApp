@@ -37,9 +37,15 @@ class PlantMedController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PlantMed $plantMed)
+    public function show($id)
     {
-        //
+        $plant = PlantMed::find($id);
+
+        if ($plant === null) {
+            return response()->json(['message' => 'Plantmed not found'], 404);
+        }
+
+        return response()->json($plant);
     }
 
     /**
