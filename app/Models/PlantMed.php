@@ -34,7 +34,7 @@ class PlantMed extends Model implements HasMedia
         'promotion',
         'sources',
         'is_available',
-        'is_prenium'
+        'is_premium'
     ];
 
     protected $casts = [

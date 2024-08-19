@@ -32,6 +32,14 @@ class Symptom extends Model implements HasMedia
         'is_premium'
     ];
 
+    protected $casts = [
+        'images' => 'array',
+        'sources' => 'array',
+        'symptoms' => 'array',
+        'is_active' => 'boolean',
+        'is_available' => 'boolean',
+    ];
+
     protected $allowedSorts = [
         'name',
         'updated_at',
