@@ -7,13 +7,9 @@ use Filament\Tables;
 use App\Models\Symptom;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Exports\SymptomExporter;
 use App\Filament\Resources\SymptomResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\SymptomResource\RelationManagers;
 
 class SymptomResource extends Resource
 {
@@ -46,13 +42,12 @@ class SymptomResource extends Resource
                                 Forms\Components\MarkdownEditor::make('description')
                                     ->columnSpan('full'),
 
-                                Forms\Components\Section::make('sources')
+                                Forms\Components\Repeater::make('sources')
                                     ->schema([
-                                        Forms\Components\Textarea::make('sources')
-                                            ->label('Source des informations')
-                                            ->rows(1)
-                                            ->cols(10),
+                                        Forms\Components\TextInput::make('url')
+                                            ->required(),
                                     ])
+                                    ->columns(2)
                                     ->collapsible(),
                             ])
                             ->columns(2),
@@ -63,7 +58,7 @@ class SymptomResource extends Resource
                                     ->collection('image')
                                     ->hiddenLabel(),
                             ])
-                            ->collapsible()
+                            ->collapsible(),
 
                     ])
                     ->columnSpan(['lg' => 2]),
