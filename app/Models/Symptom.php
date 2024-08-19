@@ -27,7 +27,7 @@ class Symptom extends Model implements HasMedia
         'name',
         'image',
         'description',
-        'source',
+        'sources',
         'is_active',
         'is_prenium'
     ];
