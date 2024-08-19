@@ -29,7 +29,7 @@ class Symptom extends Model implements HasMedia
         'description',
         'sources',
         'is_active',
-        'is_prenium'
+        'is_premium'
     ];
 
     protected $allowedSorts = [
