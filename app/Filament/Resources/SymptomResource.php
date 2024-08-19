@@ -47,7 +47,6 @@ class SymptomResource extends Resource
                                         Forms\Components\TextInput::make('url')
                                             ->required(),
                                     ])
-                                    ->columns(2)
                                     ->collapsible(),
                             ])
                             ->columns(2),
