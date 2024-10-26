@@ -15,7 +15,7 @@ use App\Http\Controllers\StripeController;
 */
 
 
-Route::redirect('/', '/admin/login');
+Route::redirect('/', '/dev/login');
 Route::get('/stripe/success', [StripeController::class, 'handleSuccess'])->name('stripe.success');
 Route::get('/test', [App\Http\Controllers\Tests\TestsController::class, 'index']);
 // Route::get('/test1', [App\Http\Controllers\Tests\SyptomByPlantController::class, 'index']);
